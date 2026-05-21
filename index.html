@@ -54,7 +54,7 @@
         .car-card:disabled { opacity: 0.25; cursor: not-allowed; transform: none !important; }
         
         .car-svg-container { width: 140px; height: 70px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; }
-        .car-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
+        .car-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; color: #ffffff; }
         .car-status { font-size: 0.85rem; color: var(--text-secondary); }
 
         .hud-header { display: flex; justify-content: space-between; align-items: center; background: rgba(11, 17, 38, 0.8); border: 1px solid var(--border-color); padding: 15px 30px; border-radius: 16px; margin-bottom: 30px; }
@@ -559,7 +559,8 @@
                 // DB에 참가자 추가
                 db.collection("algebra_racing_teams").doc(state.user.car).set({
                     members: firebase.firestore.FieldValue.arrayUnion(newMember)
-                }, { merge: true });
+                }, { merge: true }).then(() => {
+                   syncAllVehicleUIState(); // DB 반영 후 즉시 명단 갱신
             } else {
                 // 로컬 모드
                 state.teams[state.user.car].members.push(newMember);
