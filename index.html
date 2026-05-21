@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ALGEBRA RACING: 일차식의 질주</title>
-    <!-- Firebase App (the core Firebase SDK) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <!-- Firebase Firestore -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <style>
@@ -124,12 +122,10 @@
 </head>
 <body>
 
-    <!-- Top Action Row -->
     <div class="top-nav">
         <button class="btn-secondary" id="nav-action-btn" onclick="openLoginModal()">관리자 로그인</button>
     </div>
 
-    <!-- SCREEN 1: INTRO SECTION -->
     <div id="screen-intro" class="screen active">
         <div class="game-container">
             <h1 class="game-title">ALGEBRA RACING</h1>
@@ -157,7 +153,6 @@
         </div>
     </div>
 
-    <!-- SCREEN 2: STANDBY LOUNGE -->
     <div id="screen-wait" class="screen">
         <div class="game-container">
             <div class="glass-panel text-center" style="padding: 60px 20px;">
@@ -169,7 +164,6 @@
         </div>
     </div>
 
-    <!-- SCREEN 3: PLAYER ZONE -->
     <div id="screen-player" class="screen">
         <div class="game-container">
             <div class="hud-header">
@@ -182,15 +176,15 @@
 
             <div class="difficulty-wrapper">
                 <div class="diff-card lvl-easy" onclick="initiateProblemTier('초급')">
-                    <div class="diff-name">초급 코스</div>
+                    <div class="diff-name">초급 문제</div>
                     <div class="diff-reward" id="reward-label-easy">+2 km 전진</div>
                 </div>
                 <div class="diff-card lvl-medium" onclick="initiateProblemTier('중급')">
-                    <div class="diff-name">중급 코스</div>
+                    <div class="diff-name">중급 문제</div>
                     <div class="diff-reward" id="reward-label-medium">+4 km 전진</div>
                 </div>
                 <div class="diff-card lvl-hard" onclick="initiateProblemTier('상급')">
-                    <div class="diff-name">상급 코스</div>
+                    <div class="diff-name">상급 문제</div>
                     <div class="diff-reward" id="reward-label-hard">+8 km 전진</div>
                 </div>
             </div>
@@ -230,7 +224,6 @@
         </div>
     </div>
 
-    <!-- SCREEN 4: MINIGAME MATRIX -->
     <div id="screen-minigame" class="screen">
         <div class="game-container">
             <div class="glass-panel text-center">
@@ -242,7 +235,6 @@
         </div>
     </div>
 
-    <!-- SCREEN 5: CONTROL CENTER (ADMIN) -->
     <div id="screen-admin" class="screen">
         <div class="admin-container">
             <div class="glass-panel" style="margin-bottom: 25px;">
@@ -269,7 +261,6 @@
         </div>
     </div>
 
-    <!-- SCREEN 6: CHAMPIONSHIP PODIUM -->
     <div id="screen-victory" class="screen">
         <div class="game-container">
             <div class="glass-panel text-center">
@@ -301,7 +292,6 @@
         </div>
     </div>
 
-    <!-- RULES MODAL -->
     <div class="modal-overlay" id="rules-modal-layer">
         <div class="modal-content">
             <h2 style="text-align: left; margin-bottom: 20px; color: var(--color-blue);">🏎️ 레이싱 규칙 안내</h2>
@@ -318,13 +308,11 @@
         </div>
     </div>
 
-    <!-- ADMIN LOGIN MODAL (비밀번호 마스킹 적용) -->
     <div class="modal-overlay" id="login-modal-layer">
         <div class="modal-content" style="max-width: 400px; text-align: center;">
             <h2 style="margin-bottom: 20px; color: var(--text-primary);">관리자 보안 인증</h2>
             <p style="color: var(--text-secondary); margin-bottom: 20px;">관제소에 접근하려면 비밀번호를 입력하세요.</p>
-            <!-- 비밀번호가 보이지 않도록 type="password" 적용 -->
-            <input type="password" id="admin-pwd-input" class="text-input" placeholder="비밀번호 입력 (기본: 2525)" style="margin-bottom: 25px;">
+            <input type="password" id="admin-pwd-input" class="text-input" placeholder="비밀번호를 입력하세요" style="margin-bottom: 25px;">
             <div style="display: flex; gap: 10px; justify-content: center;">
                 <button class="btn-secondary" onclick="closeLoginModal()">취소</button>
                 <button class="btn-prime" style="padding: 10px 25px;" onclick="submitAdminLogin()">로그인</button>
@@ -333,10 +321,6 @@
     </div>
 
     <script>
-        // =======================================================================
-        // [Firebase 설정 부분]
-        // 선생님의 Firebase 프로젝트 콘솔에서 발급받은 구성 객체로 아래 내용을 교체하세요.
-        // =======================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBlIfw2fRKJuV5KngDXRxLCChT60-AK_0w",
             authDomain: "duru10302-bde66.firebaseapp.com",
@@ -347,7 +331,6 @@
             appId: "1:796176787475:web:899ad31f7a92903a2477e6",
         };
         
-        // Firebase 초기화 방어 코드 (설정이 안 되어 있어도 로컬 테스트가 가능하도록)
         let db;
         let isFirebaseActive = false;
         try {
@@ -357,9 +340,7 @@
         } catch (e) {
             console.warn("Firebase가 설정되지 않았습니다. 로컬 테스트 모드로 전환합니다.");
         }
-        // =======================================================================
 
-        /* 1. 세밀하고 리얼리티를 살린 6종의 자동차 SVG 디자인 세트 */
         const CAR_CONFIG = [
             { name: '크림슨 팔콘', hex: '#ff3355', path: `<path d="M10,40 L95,40 L85,25 L45,25 L35,32 L15,32 Z" fill="#ff3355" /><path d="M55,25 L80,25 L85,18 L65,18 Z" fill="#222" /><path d="M85,20 L95,20 L95,15 L90,15 Z" fill="#aa0022" /><circle cx="25" cy="40" r="9" fill="#111" stroke="#555" stroke-width="2"/><circle cx="75" cy="40" r="9" fill="#111" stroke="#555" stroke-width="2"/><circle cx="25" cy="40" r="3" fill="#ff3355"/><circle cx="75" cy="40" r="3" fill="#ff3355"/>` },
             { name: '솔라 저거너트', hex: '#ffbe1a', path: `<rect x="60" y="5" width="30" height="35" fill="#ffbe1a" rx="3" /><rect x="10" y="15" width="50" height="25" fill="#ddd" rx="2" /><rect x="65" y="10" width="12" height="15" fill="#aaddff" /><rect x="55" y="5" width="5" height="15" fill="#555" /><circle cx="20" cy="40" r="9" fill="#111" stroke="#555" stroke-width="2"/><circle cx="35" cy="40" r="9" fill="#111" stroke="#555" stroke-width="2"/><circle cx="75" cy="40" r="9" fill="#111" stroke="#555" stroke-width="2"/>` },
@@ -374,7 +355,6 @@
             return `<svg viewBox="0 0 100 50" width="100%" height="100%">${car.path}</svg>`;
         }
 
-        // Global State (Local Cache)
         let state = {
             currentScreen: 'screen-intro', isAdminMode: false,
             user: { nickname: '', car: '', uid: 'user_' + Date.now() }, 
@@ -383,7 +363,6 @@
             metrics: { solvedCount: {}, solvedHardCount: {} }
         };
         
-        // Initialize teams structure
         CAR_CONFIG.forEach(c => { state.teams[c.name] = { distance: 0, members: [], penaltyActive: false }; });
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -393,12 +372,8 @@
             initRealtimeSync();
         });
 
-        // ==========================================
-        // 🚀 실시간 Firestore 동기화 엔진
-        // ==========================================
         function initRealtimeSync() {
             const dbStatus = document.getElementById('db-status');
-            
             if(!isFirebaseActive) {
                 dbStatus.innerHTML = "⚠️ 로컬 테스트 모드 (DB 연결 안됨)";
                 dbStatus.style.color = "var(--color-yellow)";
@@ -406,7 +381,6 @@
                 return;
             }
 
-            // 팀 데이터 실시간 수신 (학생 접속 명단, 이동 거리 실시간 업데이트)
             db.collection("algebra_racing_teams").onSnapshot((snapshot) => {
                 snapshot.forEach((doc) => {
                     const data = doc.data();
@@ -417,43 +391,32 @@
                     }
                 });
                 
-                // 데이터 수신 시마다 화면 UI 갱신
                 syncAllVehicleUIState();
                 if(state.isAdminMode) refreshTrackTelemetryNodes();
                 if(state.user.car) {
                     document.getElementById('hud-distance').innerText = state.teams[state.user.car].distance;
                     checkLocalMilestones();
                 }
-            }, (error) => {
-                console.error("Firebase 팀 데이터 읽기 오류:", error);
             });
 
-            // 게임 진행 상태 실시간 수신 (관리자가 시작 누르면 참가자 화면 즉시 전환)
             db.collection("algebra_racing_state").doc("global").onSnapshot((doc) => {
                 if (doc.exists) {
                     const data = doc.data();
                     state.gameState = data.gameState || 'ready';
-                    
-                    // 참가자가 대기실에 있는데 관리자가 시작을 눌렀을 경우 강제 전환 (요청 4번 완벽 해결)
                     if(state.gameState === 'playing' && state.currentScreen === 'screen-wait' && state.user.nickname) {
                         switchActiveScreen('screen-player');
                     }
                     if(state.gameState === 'finished' && state.currentScreen === 'screen-player') {
-                        // 우승자가 나오면 게임 끝
                         const winner = CAR_CONFIG.find(c => state.teams[c.name].distance >= 200);
                         if(winner) executeMatchTermination(winner.name);
                     }
                 }
-                
                 dbStatus.innerHTML = "✅ 서버 동기화 완료 (온라인)";
                 dbStatus.style.color = "var(--color-green)";
                 document.getElementById('btn-join').disabled = false;
             });
         }
 
-        // ==========================================
-        // UI 렌더링 함수들
-        // ==========================================
         function renderCarSelectionGrid() {
             const container = document.getElementById('intro-car-grid');
             container.innerHTML = CAR_CONFIG.map(car => `
@@ -505,9 +468,6 @@
             navBtn.innerText = targetScreenId === 'screen-admin' ? '관제소 로그아웃' : '관리자 로그인';
         }
 
-        // ==========================================
-        // 로그인 및 게임 시작 등록
-        // ==========================================
         function openLoginModal() {
             if(state.currentScreen === 'screen-admin') {
                 state.isAdminMode = false;
@@ -552,18 +512,16 @@
             state.user.nickname = nicknameInput;
             state.metrics.solvedCount[nicknameInput] = 0;
             state.metrics.solvedHardCount[nicknameInput] = 0;
-    
+            
             const newMember = { nickname: nicknameInput, id: state.user.uid };
 
             if(isFirebaseActive) {
-                // DB에 참가자 추가
                 db.collection("algebra_racing_teams").doc(state.user.car).set({
                     members: firebase.firestore.FieldValue.arrayUnion(newMember)
                 }, { merge: true }).then(() => {
-                    syncAllVehicleUIState(); // DB 반영 후 즉시 명단 갱신
+                   syncAllVehicleUIState(); 
                 });
             } else {
-                // 로컬 모드
                 state.teams[state.user.car].members.push(newMember);
                 syncAllVehicleUIState();
             }
@@ -577,9 +535,8 @@
             if(state.gameState === 'playing') switchActiveScreen('screen-player');
             else switchActiveScreen('screen-wait');
         }
-        // ==========================================
-        // 수학 출제 및 풀이 엔진
-        // ==========================================
+
+        /* 1. 수식 표현 정상화 엔진 (레이텍 제거 및 고가독성 직관적 설계) */
         function formulateEquationDataset(tier) {
             const randVal = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
             const nonZeroRand = (min, max) => { let v = 0; while (v === 0) v = randVal(min, max); return v; };
@@ -588,22 +545,23 @@
             if (tier === '초급') {
                 let a = nonZeroRand(-9, 9); let b = randVal(-12, 12); let structureType = randVal(0, 1);
                 let sign = b >= 0 ? "+ " + b : "- " + Math.abs(b);
+                let expr = `${a}x ${sign}`;
                 if (structureType === 0) {
-                    problemText = `일차식 \\( ${a}x ${sign} \\) 에서 <br><span style="color:var(--color-blue)">x의 계수</span>는 얼마입니까?`;
+                    problemText = `일차식 <span style="color:#fff; font-weight:bold; font-size:1.8rem;">${expr}</span> 에서 <br><br><span style="color:var(--color-blue)">x의 계수</span>는 얼마입니까?`;
                     correctAnswer = a.toString();
                 } else {
-                    problemText = `일차식 \\( ${a}x ${sign} \\) 에서 <br><span style="color:var(--color-blue)">상수항</span>은 얼마입니까?`;
+                    problemText = `일차식 <span style="color:#fff; font-weight:bold; font-size:1.8rem;">${expr}</span> 에서 <br><br><span style="color:var(--color-blue)">상수항</span>은 얼마입니까?`;
                     correctAnswer = b.toString();
                 }
             } 
             else if (tier === '중급') {
                 let termCoeff = nonZeroRand(-8, 8); let multiplier = nonZeroRand(-6, 6); let opMode = randVal(0, 1);
                 if (opMode === 0) {
-                    problemText = `다음 식을 계산했을 때,<br>결과식의 <span style="color:var(--color-yellow)">x의 계수</span>를 구하시오.<br><br>\\( (${termCoeff}x) \\times (${multiplier}) \\)`;
+                    problemText = `다음 식을 계산했을 때,<br>결과식의 <span style="color:var(--color-yellow)">x의 계수</span>를 구하시오.<br><br><span style="color:#fff; font-weight:bold; font-size:1.8rem;">(${termCoeff}x) × (${multiplier})</span>`;
                     correctAnswer = (termCoeff * multiplier).toString();
                 } else {
                     let targetCoeff = nonZeroRand(-6, 6); let divisor = nonZeroRand(-5, 5); let initialCoeff = targetCoeff * divisor;
-                    problemText = `다음 식을 계산했을 때,<br>결과식의 <span style="color:var(--color-yellow)">x의 계수</span>를 구하시오.<br><br>\\( (${initialCoeff}x) \\div (${divisor}) \\)`;
+                    problemText = `다음 식을 계산했을 때,<br>결과식의 <span style="color:var(--color-yellow)">x의 계수</span>를 구하시오.<br><br><span style="color:#fff; font-weight:bold; font-size:1.8rem;">(${initialCoeff}x) ÷ (${divisor})</span>`;
                     correctAnswer = targetCoeff.toString();
                 }
             } 
@@ -613,13 +571,17 @@
                     let denominator = randVal(2, 4); let targetCoeff = nonZeroRand(-4, 4); let targetConst = nonZeroRand(-5, 5);
                     let a = targetCoeff * denominator; let b = targetConst * denominator;
                     let sign = b >= 0 ? "+ " + b : "- " + Math.abs(b); let queryField = randVal(0, 1);
-                    problemText = `다음 식을 분배법칙으로 풀었을 때,<br>결과의 ${queryField === 0 ? '<span style="color:var(--color-red)">x의 계수</span>' : '<span style="color:var(--color-red)">상수항</span>'}를 구하시오.<br><br>\\( \\frac{1}{${denominator}} (${a}x ${sign > 0 ? '+'+sign : sign}) \\)`;
+                    
+                    // 정교하고 세련된 상급 분수 레이아웃 설계
+                    let fractionHtml = `<div style="display:inline-block; vertical-align:middle; text-align:center; margin-right:5px; font-size:1.5rem;"><div style="border-bottom:2px solid #fff; padding:0 5px;">1</div><div style="padding:0 5px;">${denominator}</div></div>`;
+                    
+                    problemText = `다음 식을 풀었을 때,<br>결과식의 ${queryField === 0 ? '<span style="color:var(--color-red)">x의 계수</span>' : '<span style="color:var(--color-red)">상수항</span>'}를 구하시오.<br><br><span style="color:#fff; font-weight:bold; font-size:1.6rem; display:flex; align-items:center; justify-content:center;">${fractionHtml}(${a}x ${sign})</span>`;
                     correctAnswer = (queryField === 0 ? targetCoeff : targetConst).toString();
                 } else { 
                     let targetCoeff = nonZeroRand(-4, 4); let targetConst = nonZeroRand(-4, 4);
                     let a = targetCoeff * 2; let b = targetConst * 2;
                     let sign = b >= 0 ? "+ " + Math.abs(b) : "- " + Math.abs(b); let queryField = randVal(0, 1);
-                    problemText = `다음 식을 분배법칙으로 풀었을 때,<br>결과의 ${queryField === 0 ? '<span style="color:var(--color-red)">x의 계수</span>' : '<span style="color:var(--color-red)">상수항</span>'}를 구하시오.<br><br>\\( 0.5 (${a}x ${sign}) \\)`;
+                    problemText = `다음 식을 풀었을 때,<br>결과식의 ${queryField === 0 ? '<span style="color:var(--color-red)">x의 계수</span>' : '<span style="color:var(--color-red)">상수항</span>'}를 구하시오.<br><br><span style="color:#fff; font-weight:bold; font-size:1.8rem;">0.5 × (${a}x ${sign})</span>`;
                     correctAnswer = (queryField === 0 ? targetCoeff : targetConst).toString();
                 }
             }
@@ -647,7 +609,6 @@
                 state.metrics.solvedCount[state.user.nickname]++;
                 if(state.activeTier === '상급') state.metrics.solvedHardCount[state.user.nickname]++;
                 
-                // DB 거리 누적 업데이트 (트랜잭션 효과)
                 if(isFirebaseActive) {
                     db.collection("algebra_racing_teams").doc(state.user.car).set({
                         distance: firebase.firestore.FieldValue.increment(delta)
@@ -682,9 +643,6 @@
             }, 1000);
         }
 
-        // ==========================================
-        // 게임 진행 및 특수 트리거 (미니게임, 페널티)
-        // ==========================================
         function checkLocalMilestones() {
             if(!state.user.car) return;
             const leadDistance = state.teams[state.user.car].distance;
@@ -735,9 +693,6 @@
             }
         }
 
-        // ==========================================
-        // 관리자 제어 (Admin Controls)
-        // ==========================================
         function broadcastRaceStartSignal() {
             if(isFirebaseActive) {
                 db.collection("algebra_racing_state").doc("global").set({ gameState: 'playing' }, { merge: true });
@@ -817,7 +772,6 @@
             if(!confirm('정말로 모든 학생의 접속 기록과 진행 상황을 초기화하시겠습니까?')) return; 
             
             if(isFirebaseActive) {
-                // 초기화 로직 (거리 0, 멤버 비우기, 게임 상태 준비)
                 db.collection("algebra_racing_state").doc("global").set({ gameState: 'ready' });
                 CAR_CONFIG.forEach(car => {
                     db.collection("algebra_racing_teams").doc(car.name).set({ distance: 0, members: [], penaltyActive: false });
