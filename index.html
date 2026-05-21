@@ -552,7 +552,7 @@
             state.user.nickname = nicknameInput;
             state.metrics.solvedCount[nicknameInput] = 0;
             state.metrics.solvedHardCount[nicknameInput] = 0;
-            
+    
             const newMember = { nickname: nicknameInput, id: state.user.uid };
 
             if(isFirebaseActive) {
@@ -560,7 +560,8 @@
                 db.collection("algebra_racing_teams").doc(state.user.car).set({
                     members: firebase.firestore.FieldValue.arrayUnion(newMember)
                 }, { merge: true }).then(() => {
-                   syncAllVehicleUIState(); // DB 반영 후 즉시 명단 갱신
+                    syncAllVehicleUIState(); // DB 반영 후 즉시 명단 갱신
+                });
             } else {
                 // 로컬 모드
                 state.teams[state.user.car].members.push(newMember);
@@ -576,7 +577,6 @@
             if(state.gameState === 'playing') switchActiveScreen('screen-player');
             else switchActiveScreen('screen-wait');
         }
-
         // ==========================================
         // 수학 출제 및 풀이 엔진
         // ==========================================
