@@ -67,6 +67,12 @@
             max-width: 1000px;
             margin: 0 auto;
         }
+        
+        /* 전자칠판용 와이드 레이아웃 (관리자 모드 전용) */
+        .admin-container {
+            max-width: 95vw;
+            margin: 0 auto;
+        }
 
         /* Typography */
         .game-title {
@@ -101,8 +107,9 @@
         .top-nav {
             display: flex;
             justify-content: flex-end;
-            max-width: 1000px;
+            max-width: 95vw;
             margin: 0 auto 20px auto;
+            padding: 0 20px;
         }
 
         .btn-secondary {
@@ -191,16 +198,15 @@
             background: rgba(255, 255, 255, 0.04);
         }
 
-        /* Individual Car Card Accents & Glows */
-        .car-card.selected[data-color="빨강"] { border-color: var(--color-red); box-shadow: 0 0 25px var(--glow-red); }
-        .car-card.selected[data-color="노랑"] { border-color: var(--color-yellow); box-shadow: 0 0 25px var(--glow-yellow); }
-        .car-card.selected[data-color="초록"] { border-color: var(--color-green); box-shadow: 0 0 25px var(--glow-green); }
-        .car-card.selected[data-color="파랑"] { border-color: var(--color-blue); box-shadow: 0 0 25px var(--glow-blue); }
-        .car-card.selected[data-color="보라"] { border-color: var(--color-purple); box-shadow: 0 0 25px var(--glow-purple); }
-        .car-card.selected[data-color="흰색"] { border-color: var(--color-white); box-shadow: 0 0 25px var(--glow-white); }
+        .car-card.selected[data-color="스피드 레이서"] { border-color: var(--color-red); box-shadow: 0 0 25px var(--glow-red); }
+        .car-card.selected[data-color="헤비 트럭"] { border-color: var(--color-yellow); box-shadow: 0 0 25px var(--glow-yellow); }
+        .car-card.selected[data-color="캠핑카"] { border-color: var(--color-green); box-shadow: 0 0 25px var(--glow-green); }
+        .car-card.selected[data-color="스포츠 세단"] { border-color: var(--color-blue); box-shadow: 0 0 25px var(--glow-blue); }
+        .car-card.selected[data-color="픽업 트럭"] { border-color: var(--color-purple); box-shadow: 0 0 25px var(--glow-purple); }
+        .car-card.selected[data-color="클래식카"] { border-color: var(--color-white); box-shadow: 0 0 25px var(--glow-white); }
 
         .car-svg-container {
-            width: 100px;
+            width: 120px;
             height: 60px;
             margin-bottom: 15px;
             display: flex;
@@ -224,9 +230,6 @@
             cursor: not-allowed;
             transform: none !important;
         }
-
-        /* SVG Styling */
-        .svg-car-body { transition: fill 0.3s ease; }
 
         /* HUD Header */
         .hud-header {
@@ -415,21 +418,22 @@
             cursor: not-allowed;
         }
 
-        /* Racing Track Telemetry Dashboard (Admin) */
+        /* Racing Track Telemetry Dashboard (Admin - 전자칠판 와이드) */
         .track-dashboard {
             background: #030611;
             border: 2px solid rgba(0, 176, 255, 0.2);
             border-radius: 24px;
-            padding: 30px;
+            padding: 40px;
             position: relative;
             margin-bottom: 40px;
             box-shadow: 0 0 40px rgba(0, 176, 255, 0.05);
+            width: 100%;
         }
 
         .track-lane-row {
             display: flex;
             align-items: center;
-            height: 65px;
+            height: 75px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             position: relative;
         }
@@ -446,11 +450,10 @@
         }
 
         .lane-label {
-            width: 80px;
-            font-size: 0.85rem;
+            width: 100px;
+            font-size: 0.9rem;
             font-weight: 800;
             z-index: 2;
-            text-transform: uppercase;
         }
 
         .lane-arena {
@@ -461,7 +464,7 @@
 
         .track-finish-line {
             position: absolute;
-            right: 40px;
+            right: 50px;
             top: 0;
             bottom: 0;
             width: 8px;
@@ -475,8 +478,8 @@
             left: 0;
             top: 50%;
             transform: translateY(-50%);
-            width: 50px;
-            height: 32px;
+            width: 60px;
+            height: 40px;
             transition: left 0.6s cubic-bezier(0.25, 1, 0.5, 1);
             z-index: 3;
         }
@@ -527,12 +530,8 @@
             font-size: 0.85rem;
             font-weight: 600;
         }
-        .participant-actions button:hover {
-            color: #fff;
-        }
-        .participant-actions .kick-btn:hover {
-            color: var(--color-red);
-        }
+        .participant-actions button:hover { color: #fff; }
+        .participant-actions .kick-btn:hover { color: var(--color-red); }
 
         /* Minigame Grid Layout */
         .minigame-container {
@@ -628,7 +627,7 @@
             box-shadow: 0 15px 25px rgba(0, 176, 255, 0.3);
         }
 
-        /* Modal Overlay */
+        /* Modal Overlay (규칙 설명 창) */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -660,10 +659,9 @@
         <button class="btn-secondary" id="nav-action-btn" onclick="handleTopNavAction()">관리자 로그인</button>
     </div>
 
-    <div class="game-container">
-        
-        <!-- SCREEN 1: INTRO SECTION -->
-        <div id="screen-intro" class="screen active">
+    <!-- SCREEN 1: INTRO SECTION -->
+    <div id="screen-intro" class="screen active">
+        <div class="game-container">
             <h1 class="game-title">ALGEBRA RACING</h1>
             <p class="game-subtitle">일차식의 연산을 정복하고 결승선을 통과하세요</p>
             
@@ -674,9 +672,9 @@
                 </div>
                 
                 <div class="input-group">
-                    <label class="grid-label">차량 라인업 선택 <span style="text-transform:none; color:var(--text-secondary); font-weight:400;">(최대 5명 분대 구성)</span></label>
+                    <label class="grid-label">차량 라인업 선택 <span style="text-transform:none; color:var(--text-secondary); font-weight:400;">(최대 5명 탑승 가능)</span></label>
                     <div class="car-selection-grid" id="intro-car-grid">
-                        <!-- Rendered by JS with stunning unique SVGs -->
+                        <!-- JS에서 동적 생성됨 (6종의 다른 차량) -->
                     </div>
                 </div>
                 
@@ -685,18 +683,22 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- SCREEN 2: STANDBY LOUNGE -->
-        <div id="screen-wait" class="screen">
+    <!-- SCREEN 2: STANDBY LOUNGE -->
+    <div id="screen-wait" class="screen">
+        <div class="game-container">
             <div class="glass-panel text-center" style="padding: 60px 20px;">
                 <div style="font-size: 4rem; margin-bottom: 20px; animation: pulse 2s infinite;">🚦</div>
                 <h2>대기실 입장 완료</h2>
-                <p style="margin-top: 15px; color: var(--text-secondary);">관리자가 그리드 정렬을 완료하고 레이스를 시작할 때까지 잠시 대기해 주세요.</p>
+                <p style="margin-top: 15px; color: var(--text-secondary);">관리자가 모든 차량을 확인하고 레이스를 시작할 때까지 잠시 기다려 주세요.</p>
             </div>
         </div>
+    </div>
 
-        <!-- SCREEN 3: PLAYER ZONE -->
-        <div id="screen-player" class="screen">
+    <!-- SCREEN 3: PLAYER ZONE -->
+    <div id="screen-player" class="screen">
+        <div class="game-container">
             <!-- Persistent Top HUD -->
             <div class="hud-header">
                 <div class="hud-profile">
@@ -732,7 +734,7 @@
                         <div class="problem-box">
                             <div class="problem-text" id="target-equation-text">연산 장치를 동기화하는 중...</div>
                         </div>
-                        <button class="btn-change-problem" id="problem-swap-trigger" onclick="requestProblemSubstitution()">데이터 모듈 교체 (3초 패널티)</button>
+                        <button class="btn-change-problem" id="problem-swap-trigger" onclick="requestProblemSubstitution()">도저히 모르겠어요! 문제 교체 (3초 패널티)</button>
                     </div>
                     <div>
                         <div class="input-label">정답 입력 터미널</div>
@@ -755,145 +757,146 @@
                             
                             <button class="num-btn action" onclick="clearTerminalBuffer()">C</button>
                             <button class="num-btn" onclick="appendTerminalKey('0')">0</button>
-                            <button class="num-btn submit" onclick="validateTerminalAnswer()">제출</button>
+                            <button class="num-btn submit" onclick="validateTerminalAnswer()">정답 제출</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- SCREEN 4: INTENSE MINIGAME MATRIX -->
-        <div id="screen-minigame" class="screen">
+    <!-- SCREEN 4: INTENSE MINIGAME MATRIX -->
+    <div id="screen-minigame" class="screen">
+        <div class="game-container">
             <div class="glass-panel text-center">
-                <h2>🚨 SYSTEM OVERRIDE: 긴급 미션 🚨</h2>
-                <p style="color: var(--text-secondary); margin-bottom: 10px;">회로 과부하 발생! 정렬 시퀀스를 올바르게 재구축하세요.</p>
+                <h2>🚨 돌발 미니게임 발생 🚨</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 10px;">가장 먼저 통과한 팀에게 주어진 시련입니다! 숫자들을 정리하세요.</p>
                 <div style="font-size: 1.2rem; font-weight: 800; color: var(--color-blue); margin-bottom: 20px;">가장 작은 숫자부터 순서대로 터치하세요!</div>
                 
                 <div class="minigame-container" id="minigame-interactive-grid">
-                    <!-- Plates rendered programmatically -->
+                    <!-- JS에서 동적 생성됨 -->
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- SCREEN 5: CONTROL CENTER (ADMIN) -->
-        <div id="screen-admin" class="screen">
+    <!-- SCREEN 5: CONTROL CENTER (ADMIN) - 와이드 화면 적용 -->
+    <div id="screen-admin" class="screen">
+        <div class="admin-container">
             <div class="glass-panel" style="margin-bottom: 25px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
                     <h2>실시간 레이스 관제소</h2>
                     <div style="display:flex; gap: 10px;">
-                        <button class="btn-secondary" onclick="openRulesPopupModal()">게임 규칙 열람</button>
+                        <button class="btn-secondary" onclick="openRulesPopupModal()">게임 규칙 설명서 보기</button>
                         <button class="btn-secondary" style="border-color: rgba(255,51,85,0.3); color: var(--color-red);" onclick="executeSystemHardReset()">시스템 전체 초기화</button>
                     </div>
                 </div>
                 
-                <!-- Telemetry Track -->
+                <!-- Telemetry Track (전자칠판 가로 꽉 차게) -->
                 <div class="track-dashboard" id="live-telemetry-track">
                     <div class="track-finish-line"></div>
-                    <!-- Dynamically configured lanes -->
+                    <!-- JS에서 동적 생성됨 -->
                 </div>
 
                 <div style="text-align: center; margin-top: 30px;">
-                    <button class="btn-prime" style="background: linear-gradient(135deg, var(--color-green), #00aa50); box-shadow: 0 10px 20px rgba(0, 230, 118, 0.2);" onclick="broadcastRaceStartSignal()">그리드 전차량 레이스 스타트 발동</button>
+                    <button class="btn-prime" style="background: linear-gradient(135deg, var(--color-green), #00aa50); box-shadow: 0 10px 20px rgba(0, 230, 118, 0.2); font-size:1.3rem; padding: 20px 50px;" onclick="broadcastRaceStartSignal()">🏁 전차량 레이스 시작!</button>
                 </div>
             </div>
 
             <!-- Participant Grid Manager -->
-            <h2>레이서 명단 데이터 제어</h2>
+            <h2>레이서 명단 관리</h2>
             <div class="admin-management-panel" id="admin-user-roster-view">
-                <!-- Populated natively -->
+                <!-- JS에서 동적 생성됨 -->
             </div>
         </div>
+    </div>
 
-        <!-- SCREEN 6: CHAMPIONSHIP PODIUM -->
-        <div id="screen-victory" class="screen">
+    <!-- SCREEN 6: CHAMPIONSHIP PODIUM -->
+    <div id="screen-victory" class="screen">
+        <div class="game-container">
             <div class="glass-panel text-center">
                 <div style="font-size: 5rem; margin-bottom: 10px; filter: drop-shadow(0 0 20px rgba(255,190,26,0.4));">🏆</div>
-                <h1 style="background: linear-gradient(135deg, #ffbe1a, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 3.5rem;">VICTORY</h1>
-                <p style="font-size: 1.3rem; font-weight: 700; margin-bottom: 40px;" id="victory-announcement-headline">빨강 팀 레이싱 매치 피니시!</p>
+                <h1 style="background: linear-gradient(135deg, #ffbe1a, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 3.5rem;">우승을 축하합니다!</h1>
+                <p style="font-size: 1.5rem; font-weight: 700; margin-bottom: 40px; color: var(--color-blue);" id="victory-announcement-headline">000 차량 200km 결승선 통과!</p>
                 
                 <div style="max-width: 500px; margin: 0 auto 40px auto; background: rgba(0,0,0,0.3); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05);">
-                    <div class="input-label">우승 기여 크루 명단</div>
+                    <div class="input-label">우승팀 참가자 명단</div>
                     <div id="victory-team-contributors-list" style="font-size: 1.2rem; font-weight: bold; line-height: 1.8; letter-spacing: 0.5px;"></div>
                 </div>
 
                 <div class="victory-grid">
                     <div class="mvp-box">
-                        <div class="mvp-title">⚡ 질보다 양 (최다 해결)</div>
+                        <div class="mvp-title">⚡ 질보다 양 (가장 많이 푼 학생)</div>
                         <div style="font-size: 1.5rem; font-weight: 800;" id="mvp-quantity-name">-</div>
                     </div>
                     <div class="mvp-box" style="border-color: rgba(255,51,85,0.2);">
-                        <div class="mvp-title" style="color: var(--color-red);">🔥 양보단 질 (최다 상급 해결)</div>
+                        <div class="mvp-title" style="color: var(--color-red);">🔥 양보단 질 (상급을 가장 많이 푼 학생)</div>
                         <div style="font-size: 1.5rem; font-weight: 800;" id="mvp-quality-name">-</div>
                     </div>
                 </div>
 
                 <div style="margin-top: 45px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px;">
-                    <div class="input-label" style="margin-bottom: 20px;">종합 레이스 타임라인 순위</div>
+                    <div class="input-label" style="margin-bottom: 20px;">최종 레이스 순위</div>
                     <div id="victory-final-leaderboard-ranks" style="max-width: 500px; margin: 0 auto; text-align: left;">
-                        <!-- Ranks -->
+                        <!-- JS에서 동적 생성됨 -->
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- RULES POPUP MODAL -->
+    <!-- RULES POPUP MODAL (중학생 맞춤형 쉬운 설명) -->
     <div class="modal-overlay" id="rules-modal-layer">
         <div class="modal-content">
-            <h2 style="text-align: left; margin-bottom: 20px; color: var(--color-blue);">레이싱 규칙 핸드북</h2>
-            <div style="color: var(--text-secondary); line-height: 1.7; font-size: 0.95rem; display: flex; flex-direction: column; gap: 15px; max-height: 50vh; overflow-y:auto; padding-right:10px;">
-                <p><strong>1. 기본 메커니즘:</strong> 플레이어는 닉네임과 차량을 골라 분대를 결성합니다. 차량당 최대 5명까지 수용 가능하며 정원 초과 시 슬롯이 잠깁니다.</p>
-                <p><strong>2. 문제 매트릭스:</strong> 레이스가 발동되면 연산 문제를 해결해야 합니다. 초급(+2km), 중급(+4km), 상급(+8km)의 보상을 제공합니다.</p>
-                <p><strong>3. 상급 코스 특이성:</strong> 상급 문제 모듈에는 분수와 소수의 복합 수식이 반영되어 있어 정밀한 산출 연산이 요구됩니다.</p>
-                <p><strong>4. 시스템 교체 시스템:</strong> 난해한 문항 직면 시 전면 교체 신호를 줄 수 있으나 시스템 리부팅 패널티로 3초간 비활성화됩니다.</p>
-                <p><strong>5. 서킷 게이트 미니게임:</strong> 전차량 중 50km와 100km 임계점을 선두로 통과하는 팀원 전체에게 제어권 오버라이딩 미니게임이 전개됩니다. 음수를 망라한 대소관계 오름차순 터치를 성공해야 탈출 가능합니다. 오클릭 시 3초 락다운 정지 벌칙이 가해집니다.</p>
-                <p><strong>6. 감속 구간 패널티:</strong> 150km 지점을 최초 돌파하는 차량의 크루원 전원에게 시스템 부하가 전달되어 연산 보상 전진 효율이 일괄 -1km 하락합니다.</p>
+            <h2 style="text-align: left; margin-bottom: 20px; color: var(--color-blue);">🏎️ 레이싱 규칙 안내</h2>
+            <div style="color: #ccc; line-height: 1.7; font-size: 1rem; display: flex; flex-direction: column; gap: 15px; max-height: 50vh; overflow-y:auto; padding-right:10px;">
+                <p><strong>1. 팀 구성하기:</strong> 마음에 드는 디자인의 자동차를 골라 탑승하세요! (자동차 한 대당 최대 5명까지만 탈 수 있어요)</p>
+                <p><strong>2. 문제 풀고 전진하기:</strong> 초급(+2km), 중급(+4km), 상급(+8km) 중 하나를 선택해 수학 문제를 풉니다. 정답을 맞히면 우리 팀 자동차가 앞으로 쑥쑥 나갑니다!</p>
+                <p><strong>3. 문제 교체:</strong> 도저히 못 풀겠다면 문제를 바꿀 수 있어요. 단, 페널티로 3초 동안 자동차가 멈추니 신중하게 눌러주세요.</p>
+                <p><strong>4. 돌발 미니게임:</strong> 50km와 100km 지점을 1등으로 통과하는 팀에게는 10개의 숫자가 나타납니다. 화면에 나온 숫자를 <strong>가장 작은 수부터 차례대로 눌러야만</strong> 빠져나갈 수 있어요! (틀리면 3초 동안 정지됩니다)</p>
+                <p><strong>5. 1등의 무게 (엔진 과부하):</strong> 150km 지점을 1등으로 통과하는 팀은 선두를 유지하는 대가로 엔진에 과부하가 걸립니다. 이때부터는 정답을 맞혀도 이동하는 거리가 1km씩 줄어듭니다.</p>
             </div>
             <div style="text-align: right; margin-top: 30px;">
-                <button class="btn-secondary" onclick="closeRulesPopupModal()">창 닫기</button>
+                <button class="btn-secondary" onclick="closeRulesPopupModal()">확인 완료!</button>
             </div>
         </div>
     </div>
 
     <script>
-        /* Modern Studio Vector Graphics For Vehicles */
-        function getCarSVG(hexColor) {
+        /* 6가지 자동차 디자인 정의 (SVG Paths) */
+        const CAR_CONFIG = [
+            { name: '스피드 레이서', hex: '#ff3355', path: 'M15,35 L95,35 L85,18 L25,18 Z' }, // 날렵한 디자인
+            { name: '헤비 트럭', hex: '#ffbe1a', path: 'M10,35 L90,35 L90,5 L40,5 L40,20 L10,20 Z' }, // 네모나고 큰 트럭
+            { name: '캠핑카', hex: '#00e676', path: 'M10,35 L90,35 L90,15 Q90,5 80,5 L20,5 Q10,5 10,15 Z' }, // 둥근 박스형 밴
+            { name: '스포츠 세단', hex: '#00b0ff', path: 'M10,35 L90,35 L85,22 L70,12 L35,12 L20,22 L10,22 Z' }, // 일반적인 3박스 세단
+            { name: '픽업 트럭', hex: '#af40ff', path: 'M10,35 L90,35 L90,20 L55,20 L55,10 L20,10 L15,20 L10,20 Z' }, // 뒤가 파인 픽업트럭
+            { name: '클래식카', hex: '#ffffff', path: 'M10,35 L90,35 Q95,35 95,25 Q95,15 85,15 Q80,15 75,10 Q65,5 50,5 Q35,5 25,10 Q20,15 15,15 Q5,15 5,25 Q5,35 10,35 Z' } // 둥글둥글한 클래식
+        ];
+
+        function getCarSVG(hexColor, name) {
+            const car = CAR_CONFIG.find(c => c.name === name);
             return `<svg viewBox="0 0 100 50" width="100%" height="100%">
-                <path class="svg-car-body" d="M15,35 L20,20 Q25,12 45,12 L75,15 Q88,17 92,26 L95,35 Q95,40 85,40 L20,40 Q15,40 15,35 Z" fill="${hexColor}" />
-                <path d="M45,15 L60,15 L58,23 L42,23 Z" fill="#111c36" />
-                <path d="M63,15 L74,17 L70,23 L61,23 Z" fill="#111c36" />
-                <circle cx="30" cy="38" r="8" fill="#080c16" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-                <circle cx="30" cy="38" r="4" fill="#fff"/>
-                <circle cx="78" cy="38" r="8" fill="#080c16" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-                <circle cx="78" cy="38" r="4" fill="#fff"/>
-                <path d="M92,26 L96,27 L95,31 L91,30 Z" fill="#ffea00" opacity="0.8"/>
-                <path d="M15,28 L11,29 L12,32 L16,31 Z" fill="#ff3300"/>
+                <path class="svg-car-body" d="${car.path}" fill="${hexColor}" />
+                <circle cx="25" cy="35" r="8" fill="#080c16" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                <circle cx="25" cy="35" r="4" fill="#fff"/>
+                <circle cx="75" cy="35" r="8" fill="#080c16" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                <circle cx="75" cy="35" r="4" fill="#fff"/>
             </svg>`;
         }
 
-        const CAR_CONFIG = [
-            { name: '빨강', hex: '#ff3355' },
-            { name: '노랑', hex: '#ffbe1a' },
-            { name: '초록', hex: '#00e676' },
-            { name: '파랑', hex: '#00b0ff' },
-            { name: '보라', hex: '#af40ff' },
-            { name: '흰색', hex: '#ffffff' }
-        ];
-
-        // Central Simulator Global State Store
+        // Global State Store
         let state = {
             currentScreen: 'screen-intro',
             isAdminMode: false,
             user: { nickname: '', car: '' },
-            gameState: 'ready', // ready, playing, finished
+            gameState: 'ready',
             teams: {
-                '빨강': { distance: 0, members: [] },
-                '노랑': { distance: 0, members: [] },
-                '초록': { distance: 0, members: [] },
-                '파랑': { distance: 0, members: [] },
-                '보라': { distance: 0, members: [] },
-                '흰색': { distance: 0, members: [] }
+                '스피드 레이서': { distance: 0, members: [] },
+                '헤비 트럭': { distance: 0, members: [] },
+                '캠핑카': { distance: 0, members: [] },
+                '스포츠 세단': { distance: 0, members: [] },
+                '픽업 트럭': { distance: 0, members: [] },
+                '클래식카': { distance: 0, members: [] }
             },
             triggerFlags: {
                 gate50: false,
@@ -911,7 +914,6 @@
             }
         };
 
-        // Initialize Module UI elements
         window.addEventListener('DOMContentLoaded', () => {
             renderCarSelectionGrid();
             renderAdminTelemetryTrack();
@@ -922,9 +924,9 @@
             const container = document.getElementById('intro-car-grid');
             container.innerHTML = CAR_CONFIG.map(car => `
                 <button class="car-card" id="selector-card-${car.name}" data-color="${car.name}" onclick="selectCarNode('${car.name}')">
-                    <div class="car-svg-container">${getCarSVG(car.hex)}</div>
-                    <div class="car-title">${car.name} 머신</div>
-                    <div class="car-status"><span id="live-slot-count-${car.name}">0</span> / 5 슬롯</div>
+                    <div class="car-svg-container">${getCarSVG(car.hex, car.name)}</div>
+                    <div class="car-title">${car.name}</div>
+                    <div class="car-status"><span id="live-slot-count-${car.name}">0</span> / 5 탑승중</div>
                 </button>
             `).join('');
         }
@@ -936,7 +938,7 @@
                     <div class="lane-label" style="color: ${car.hex};">${car.name}</div>
                     <div class="lane-arena">
                         <div class="live-car-node" id="telemetry-node-${car.name}">
-                            ${getCarSVG(car.hex)}
+                            ${getCarSVG(car.hex, car.name)}
                         </div>
                     </div>
                 </div>
@@ -944,8 +946,7 @@
         }
 
         function loadMockRosterData() {
-            // Emulate a living room simulation for realistic prototype operations
-            const names = ['Alpha', 'Veloce', 'Apex', 'Mach', 'Turbo', 'Matrix', 'Vector', 'Pixel'];
+            const names = ['우람이', '슬기', '재석', '하하', '명수', '지효', '종국', '개리'];
             names.forEach((name, i) => {
                 const randomCar = CAR_CONFIG[i % CAR_CONFIG.length].name;
                 if(state.teams[randomCar].members.length < 5) {
@@ -998,13 +999,13 @@
                 switchActiveScreen(state.user.nickname ? 'screen-player' : 'screen-intro');
                 state.isAdminMode = false;
             } else {
-                const password = prompt('관리자 보안인증 비밀번호를 입력하세요:');
+                const password = prompt('관리자 비밀번호를 입력하세요 (기본: 2525):');
                 if(password === '2525') {
                     state.isAdminMode = true;
                     switchActiveScreen('screen-admin');
                     setTimeout(refreshTrackTelemetryNodes, 100);
                 } else if(password !== null) {
-                    alert('인증에 실패하였습니다.');
+                    alert('비밀번호가 틀렸습니다.');
                 }
             }
         }
@@ -1020,11 +1021,11 @@
 
         function processRegistration() {
             const nicknameInput = document.getElementById('nickname-input').value.trim();
-            if(!nicknameInput) return alert('유효한 레이서 닉네임을 입력하세요.');
-            if(!state.user.car) return alert('참전할 랠리 머신을 배정해야 합니다.');
+            if(!nicknameInput) return alert('게임에서 사용할 닉네임을 입력하세요.');
+            if(!state.user.car) return alert('경주에 참가할 자동차를 먼저 선택하세요.');
 
             if(state.teams[state.user.car].members.length >= 5) {
-                return alert('선택하신 머신의 분대 정원이 초과되었습니다.');
+                return alert('이 자동차는 이미 5명이 꽉 찼습니다. 다른 차를 골라주세요.');
             }
 
             state.user.nickname = nicknameInput;
@@ -1046,7 +1047,7 @@
             }
         }
 
-        /* Math Generation Algorithm Engine */
+        /* Math Generation Algorithm (정수 정답 도출 로직 유지) */
         function formulateEquationDataset(tier) {
             const randVal = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
             const nonZeroRand = (min, max) => { let v = 0; while (v === 0) v = randVal(min, max); return v; };
@@ -1061,10 +1062,10 @@
                 let sign = b >= 0 ? "+ " + b : "- " + Math.abs(b);
                 
                 if (structureType === 0) {
-                    problemText = `일차식 \( ${a}x ${sign} \) 에서 <br><span style="color:var(--color-blue)">x의 계수</span>는 얼마입니까?`;
+                    problemText = `일차식 \\( ${a}x ${sign} \\) 에서 <br><span style="color:var(--color-blue)">x의 계수</span>는 얼마입니까?`;
                     correctAnswer = a.toString();
                 } else {
-                    problemText = `일차식 \( ${a}x ${sign} \) 에서 <br><span style="color:var(--color-blue)">상수항</span>은 얼마입니까?`;
+                    problemText = `일차식 \\( ${a}x ${sign} \\) 에서 <br><span style="color:var(--color-blue)">상수항</span>은 얼마입니까?`;
                     correctAnswer = b.toString();
                 }
             } 
@@ -1073,20 +1074,20 @@
                 let multiplier = nonZeroRand(-6, 6);
                 let opMode = randVal(0, 1);
 
-                if (opMode === 0) { // Multiplication
-                    problemText = `다음 단항식과 수의 곱셈을 계산했을 때,<br>결과식의 <span style="color:var(--color-yellow)">x의 계수</span>를 구하시오.<br><br>\( (${termCoeff}x) \times (${multiplier}) \)`;
+                if (opMode === 0) {
+                    problemText = `다음 식을 계산했을 때,<br>결과식의 <span style="color:var(--color-yellow)">x의 계수</span>를 구하시오.<br><br>\\( (${termCoeff}x) \\times (${multiplier}) \\)`;
                     correctAnswer = (termCoeff * multiplier).toString();
-                } else { // Division with clean results
+                } else {
                     let targetCoeff = nonZeroRand(-6, 6);
                     let divisor = nonZeroRand(-5, 5);
                     let initialCoeff = targetCoeff * divisor;
-                    problemText = `다음 단항식과 수의 나눗셈을 계산했을 때,<br>결과식의 <span style="color:var(--color-yellow)">x의 계수</span>를 구하시오.<br><br>\( (${initialCoeff}x) \div (${divisor}) \)`;
+                    problemText = `다음 식을 계산했을 때,<br>결과식의 <span style="color:var(--color-yellow)">x의 계수</span>를 구하시오.<br><br>\\( (${initialCoeff}x) \\div (${divisor}) \\)`;
                     correctAnswer = targetCoeff.toString();
                 }
             } 
             else if (tier === '상급') {
                 let patternSelection = randVal(0, 1);
-                if (patternSelection === 0) { // Fraction distribution pattern
+                if (patternSelection === 0) { 
                     let denominator = randVal(2, 4);
                     let targetCoeff = nonZeroRand(-4, 4);
                     let targetConst = nonZeroRand(-5, 5);
@@ -1095,33 +1096,18 @@
                     let sign = b >= 0 ? "+ " + b : "- " + Math.abs(b);
                     
                     let queryField = randVal(0, 1);
-                    problemText = `다음 식을 전개 및 정리했을 때,<br>결과식의 ${queryField === 0 ? '<span style="color:var(--color-red)">x의 계수</span>' : '<span style="color:var(--color-red)">상수항</span>'}를 구하시오.<br><br>\( \frac{1 concert text-decoration-style}{\strut ${denominator}} (${a}x ${sign}) \)`;
-                    // Quick overwrite text to standard fractional look
-                    problemText = `다음 식을 전개 및 정리했을 때,<br>결과식의 ${queryField === 0 ? '<span style="color:var(--color-red)">x의 계수</span>' : '<span style="color:var(--color-red)">상수항</span>'}를 구하시오.<br><br>\( \frac{1}{${denominator}} (${a}x ${sign > 0 ? '+'+sign : sign}) \)`;
+                    problemText = `다음 식을 분배법칙으로 풀었을 때,<br>결과의 ${queryField === 0 ? '<span style="color:var(--color-red)">x의 계수</span>' : '<span style="color:var(--color-red)">상수항</span>'}를 구하시오.<br><br>\\( \\frac{1}{${denominator}} (${a}x ${sign > 0 ? '+'+sign : sign}) \\)`;
                     correctAnswer = (queryField === 0 ? targetCoeff : targetConst).toString();
-                } else { // Decimal layout pattern
-                    let decFactor = randVal(1, 3) * 0.5; // 0.5 or 1.5
+                } else { 
                     let targetCoeff = nonZeroRand(-4, 4);
                     let targetConst = nonZeroRand(-4, 4);
                     
-                    // compute reverse to keep outputs integer based
-                    let a = Math.round((targetCoeff / decFactor) * 10) / 10;
-                    let b = Math.round((targetConst / decFactor) * 10) / 10;
-                    
-                    // structural fallback to make absolutely sure they are neat decimals
-                    if(decFactor === 0.5) {
-                        a = targetCoeff * 2;
-                        b = targetConst * 2;
-                        let sign = b >= 0 ? "+ " + b : "- " + Math.abs(b);
-                        let queryField = randVal(0, 1);
-                        problemText = `다음 식의 연산 결과물에서 ${queryField === 0 ? '<span style="color:var(--color-red)">x의 계수</span>' : '<span style="color:var(--color-red)">상수항</span>'}를 입력하세요.<br><br>\( 0.5 (${a}x ${sign}) \)`;
-                        correctAnswer = (queryField === 0 ? targetCoeff : targetConst).toString();
-                    } else {
-                        let sign = targetConst >= 0 ? "+ " + targetConst : "- " + Math.abs(targetConst);
-                        problemText = `다음 식에서 상수를 구하시오.<br>\( (${targetCoeff}x ${sign}) + (${targetCoeff}x) \)`;
-                        problemText = `다음 동류항 결합 식의 <span style="color:var(--color-red)">상수항</span>을 구하시오.<br><br>\( (${targetCoeff}x ${sign}) - (${nonZeroRand(1,4)}x) \)`;
-                        correctAnswer = targetConst.toString();
-                    }
+                    let a = targetCoeff * 2;
+                    let b = targetConst * 2;
+                    let sign = b >= 0 ? "+ " + Math.abs(b) : "- " + Math.abs(b);
+                    let queryField = randVal(0, 1);
+                    problemText = `다음 식을 분배법칙으로 풀었을 때,<br>결과의 ${queryField === 0 ? '<span style="color:var(--color-red)">x의 계수</span>' : '<span style="color:var(--color-red)">상수항</span>'}를 구하시오.<br><br>\\( 0.5 (${a}x ${sign}) \\)`;
+                    correctAnswer = (queryField === 0 ? targetCoeff : targetConst).toString();
                 }
             }
 
@@ -1133,7 +1119,7 @@
             state.activeProblem = formulateEquationDataset(tier);
             state.terminalInput = '';
             
-            document.getElementById('workspace-tier-title').innerText = `${tier} 미션 연산 노드`;
+            document.getElementById('workspace-tier-title').innerText = `${tier} 문제 푸는 중`;
             document.getElementById('target-equation-text').innerHTML = state.activeProblem.text;
             document.getElementById('terminal-string-buffer').innerText = '';
             
@@ -1154,13 +1140,11 @@
         function validateTerminalAnswer() {
             const workspace = document.getElementById('quiz-workspace');
             if(state.terminalInput === state.activeProblem.ans) {
-                // Correct calculation processing sequence
                 let delta = 0;
                 if(state.activeTier === '초급') delta = 2;
                 else if(state.activeTier === '중급') delta = 4;
                 else if(state.activeTier === '상급') delta = 8;
 
-                // Adjust reward according to 150km penalty flag
                 if(state.teams[state.user.car].penaltyActive) {
                     delta = Math.max(1, delta - 1);
                 }
@@ -1169,7 +1153,7 @@
                 state.metrics.solvedCount[state.user.nickname]++;
                 if(state.activeTier === '상급') state.metrics.solvedHardCount[state.user.nickname]++;
 
-                alert(`정답입니다! 팀 머신이 ${delta}km 추진력을 얻었습니다.`);
+                alert(`정답입니다! 우리 팀 자동차가 ${delta}km 앞으로 나갑니다!`);
                 
                 document.getElementById('hud-distance').innerText = state.teams[state.user.car].distance;
                 document.getElementById('quiz-workspace').style.display = 'none';
@@ -1177,7 +1161,7 @@
                 evaluateMilestoneTriggers();
             } else {
                 workspace.classList.add('shake-element');
-                alert('연산 오차가 검출되었습니다. 식을 다시 분석해 보세요.');
+                alert('앗, 틀렸어요. 식을 다시 한 번 천천히 계산해 보세요!');
                 setTimeout(() => workspace.classList.remove('shake-element'), 400);
                 clearTerminalBuffer();
             }
@@ -1194,14 +1178,13 @@
                     clearInterval(interval);
                     initiateProblemTier(state.activeTier);
                     triggerBtn.disabled = false;
-                    triggerBtn.innerText = "데이터 모듈 교체 (3초 패널티)";
+                    triggerBtn.innerText = "도저히 모르겠어요! 문제 교체 (3초 패널티)";
                 } else {
-                    triggerBtn.innerText = `시스템 재부팅 중... (${counter}초)`;
+                    triggerBtn.innerText = `문제 교체 중입니다... (${counter}초 남음)`;
                 }
             }, 1000);
         }
 
-        /* Game Progress Milestone Gate Controllers */
         function evaluateMilestoneTriggers() {
             const leadDistance = state.teams[state.user.car].distance;
 
@@ -1217,19 +1200,17 @@
                 state.triggerFlags.gate150 = true;
                 state.teams[state.user.car].penaltyActive = true;
                 
-                // Notify user dynamically via labels update
-                document.getElementById('reward-label-easy').innerText = '+1 km 전진 (부하 적용)';
-                document.getElementById('reward-label-medium').innerText = '+3 km 전진 (부하 적용)';
-                document.getElementById('reward-label-hard').innerText = '+7 km 전진 (부하 적용)';
+                document.getElementById('reward-label-easy').innerText = '+1 km 전진 (과부하)';
+                document.getElementById('reward-label-medium').innerText = '+3 km 전진 (과부하)';
+                document.getElementById('reward-label-hard').innerText = '+7 km 전진 (과부하)';
                 
-                alert('🚨 WARNING: 150km 서킷 한계점 최초 통과! 엔진 출력 제한 부하가 연동되어 전진 기동력이 1km 감소합니다.');
+                alert('🚨 150km 최초 돌파! 선두 유지의 대가로 엔진 과부하가 걸려 이동 거리가 1km씩 줄어듭니다.');
             }
             else if(leadDistance >= 200 && state.gameState !== 'finished') {
                 executeMatchTermination(state.user.car);
             }
         }
 
-        /* Sorting Mini-Game Operations */
         function engageMinigameIntervention() {
             switchActiveScreen('screen-minigame');
             const grid = document.getElementById('minigame-interactive-grid');
@@ -1237,7 +1218,7 @@
 
             let numericalPool = [];
             while(numericalPool.length < 10) {
-                let randomNum = Math.floor(Math.random() * 101) - 50; // Range -50 to 50
+                let randomNum = Math.floor(Math.random() * 101) - 50; 
                 if(!numericalPool.includes(randomNum)) numericalPool.push(randomNum);
             }
 
@@ -1258,7 +1239,7 @@
                 buttonElement.disabled = true;
                 state.minigamePointer++;
                 if(state.minigamePointer >= 10) {
-                    alert('동기화 복구 완료! 레이싱 코스로 즉각 복귀합니다.');
+                    alert('미니게임 성공! 다시 경주를 시작합니다.');
                     switchActiveScreen('screen-player');
                 }
             } else {
@@ -1266,7 +1247,7 @@
                 container.classList.add('shake-element');
                 container.style.pointerEvents = 'none';
                 
-                alert('순서 배치가 일치하지 않습니다. 벌칙으로 인해 시스템이 3초간 잠금 상태로 전환됩니다.');
+                alert('틀렸습니다! 순서가 맞지 않아 3초 동안 정지됩니다.');
                 
                 setTimeout(() => {
                     container.classList.remove('shake-element');
@@ -1275,22 +1256,20 @@
             }
         }
 
-        /* Race Control (Admin View Sync) */
         function broadcastRaceStartSignal() {
             state.gameState = 'playing';
-            alert('그리드 신호 전송 완료! 레이스를 개시합니다.');
+            alert('출발 신호가 떨어졌습니다! 문제를 풀고 결승선으로 달려가세요!');
             if(state.user.nickname) {
                 switchActiveScreen('screen-player');
             } else {
                 switchActiveScreen('screen-wait');
             }
             
-            // Activate background asynchronous runner to make the dashboard alive in mock simulation
+            // 시뮬레이션을 위한 가상의 타팀 주행 로직
             setInterval(() => {
                 if(state.gameState !== 'playing') return;
                 CAR_CONFIG.forEach(c => {
                     if(c.name !== state.user.car) {
-                        // simulate background competition speed changes dynamically
                         state.teams[c.name].distance += Math.random() > 0.7 ? (Math.random() > 0.5 ? 4 : 2) : 0;
                         if(state.teams[c.name].distance >= 200) {
                             executeMatchTermination(c.name);
@@ -1308,7 +1287,6 @@
                 const distanceValue = state.teams[car.name].distance;
                 const visualNode = document.getElementById(`telemetry-node-${car.name}`);
                 if(visualNode) {
-                    // map 200km to max percentage space safely
                     let logicalPercentage = (distanceValue / 200) * 85; 
                     visualNode.style.left = `${Math.min(logicalPercentage, 85)}%`;
                 }
@@ -1325,7 +1303,7 @@
                         <div class="participant-actions">
                             <button onclick="modifyUserNicknamePrompt('${car.name}', '${m.id}')">수정</button>
                             <button onclick="reassignUserCarPrompt('${car.name}', '${m.id}')">이동</button>
-                            <button class="kick-btn" onclick="expelUserSession('${car.name}', '${m.id}')">퇴장</button>
+                            <button class="kick-btn" onclick="expelUserSession('${car.name}', '${m.id}')">강퇴</button>
                         </div>
                     </div>
                 `).join('');
@@ -1333,10 +1311,10 @@
                 return `
                     <div class="team-box">
                         <div class="team-title-bar" style="color: ${car.hex};">
-                            <span>${car.name} 머신 크루</span>
-                            <span>${state.teams[car.name].distance} km</span>
+                            <span>${car.name} 팀</span>
+                            <span>${state.teams[car.name].distance} km 달림</span>
                         </div>
-                        <div>${membersList || '<span style="color:var(--text-secondary); font-size:0.85rem;">소속원 없음</span>'}</div>
+                        <div>${membersList || '<span style="color:var(--text-secondary); font-size:0.85rem;">아직 아무도 안 탔어요</span>'}</div>
                     </div>
                 `;
             }).join('');
@@ -1344,9 +1322,8 @@
 
         function modifyUserNicknamePrompt(carName, id) {
             const member = state.teams[carName].members.find(m => m.id === id);
-            const nextName = prompt('변경할 새 닉네임을 입력하세요:', member.nickname);
+            const nextName = prompt('변경할 새 닉네임을 적어주세요:', member.nickname);
             if(nextName && nextName.trim()) {
-                // update metrics safely too
                 state.metrics.solvedCount[nextName.trim()] = state.metrics.solvedCount[member.nickname] || 0;
                 state.metrics.solvedHardCount[nextName.trim()] = state.metrics.solvedHardCount[member.nickname] || 0;
                 member.nickname = nextName.trim();
@@ -1356,21 +1333,22 @@
         }
 
         function reassignUserCarPrompt(currentCar, id) {
-            const targetColor = prompt('이동할 차량의 이름을 지정하세요 (빨강, 노랑, 초록, 파랑, 보라, 흰색):');
+            const names = CAR_CONFIG.map(c => c.name).join(', ');
+            const targetColor = prompt(`어떤 차로 옮길까요? (${names}):`);
             if(state.teams[targetColor]) {
-                if(state.teams[targetColor].members.length >= 5) return alert('목표 차량 정원이 마감되었습니다.');
+                if(state.teams[targetColor].members.length >= 5) return alert('그 차는 이미 5명이 탔어요!');
                 const idx = state.teams[currentCar].members.findIndex(m => m.id === id);
                 const targetObj = state.teams[currentCar].members.splice(idx, 1)[0];
                 state.teams[targetColor].members.push(targetObj);
                 if(id === 'user') state.user.car = targetColor;
                 syncAllVehicleUIState();
             } else if(targetColor !== null) {
-                alert('잘못된 차량 분류 식별자입니다.');
+                alert('없는 자동차 이름입니다.');
             }
         }
 
         function expelUserSession(carName, id) {
-            if(!confirm('해당 참가자를 가상 세션에서 추방 전송합니까?')) return;
+            if(!confirm('정말 이 학생을 내보낼까요?')) return;
             const idx = state.teams[carName].members.findIndex(m => m.id === id);
             state.teams[carName].members.splice(idx, 1);
             if(id === 'user') {
@@ -1382,22 +1360,19 @@
         }
 
         function executeSystemHardReset() {
-            if(!confirm('정말 시스템 데이터를 초기 설계 사양으로 하드 리셋합니까?')) return;
+            if(!confirm('모든 기록을 지우고 처음부터 다시 시작할까요?')) return;
             location.reload();
         }
 
-        /* Match Completion / Victory Phase Screen Rendering */
         function executeMatchTermination(winningCarName) {
             state.gameState = 'finished';
             switchActiveScreen('screen-victory');
 
-            document.getElementById('victory-announcement-headline').innerText = `${winningCarName} 팀 레이싱 머신 200km 랠리 대승 완주!`;
+            document.getElementById('victory-announcement-headline').innerText = `🎉 ${winningCarName} 팀이 가장 먼저 200km를 들어왔어요! 🎉`;
             
-            // Build contributor view strings
             const crewMembersNames = state.teams[winningCarName].members.map(m => m.nickname).join(', ');
-            document.getElementById('victory-team-contributors-list').innerText = crewMembersNames || "기여한 크루원 세션 없음";
+            document.getElementById('victory-team-contributors-list').innerText = crewMembersNames || "참가자 없음";
 
-            // Evaluate MVP rankings
             let maxCount = -1, quantityMvp = "-";
             let maxHardCount = -1, qualityMvp = "-";
 
@@ -1411,23 +1386,21 @@
                     qualityMvp = key;
                 }
             }
-            document.getElementById('mvp-quantity-name').innerText = `${quantityMvp} (${maxCount}개 해결)`;
-            document.getElementById('mvp-quality-name').innerText = `${qualityMvp} (상급 ${maxHardCount}개 해결)`;
+            document.getElementById('mvp-quantity-name').innerText = `${quantityMvp} (${maxCount}개 풀었음!)`;
+            document.getElementById('mvp-quality-name').innerText = `${qualityMvp} (어려운 거 ${maxHardCount}개 풀었음!)`;
 
-            // Compute sorted final positions leaderboard elements
             const sortedRankboard = CAR_CONFIG.map(c => ({ name: c.name, dist: state.teams[c.name].distance, hex: c.hex }))
                                              .sort((a,b) => b.dist - a.dist);
             
             const boardContainer = document.getElementById('victory-final-leaderboard-ranks');
             boardContainer.innerHTML = sortedRankboard.map((item, idx) => `
                 <div style="display:flex; justify-content:space-between; padding: 12px; margin-bottom:6px; background:rgba(255,255,255,0.02); border-radius:10px; border-left:4px solid ${item.hex};">
-                    <span style="font-weight:bold;">${idx + 1}위 : ${item.name} 머신</span>
-                    <span style="color:var(--text-secondary);">${item.dist} km 주행 완료</span>
+                    <span style="font-weight:bold;">${idx + 1}등 : ${item.name}</span>
+                    <span style="color:var(--text-secondary);">${item.dist} km 통과</span>
                 </div>
             `).join('');
         }
 
-        /* Modal Overlay Interaction Handlers */
         function openRulesPopupModal() {
             document.getElementById('rules-modal-layer').classList.add('active');
         }
