@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>일차식 레이싱 대결!</title>
+    <style>
+        /* 기본 리셋 및 글로벌 설정 */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Malgun Gothic', sans-serif; }
+        body { background-color: #f4f7f6; color: #333; overflow-x: hidden; touch-action: pan-y; }
+        .screen { display: none; min-height: 100vh; padding: 20px; }
+        .active { display: block; }
+        h1, h2 { text-align: center; margin-bottom: 20px; }
+        button { cursor: pointer; border: none; border-radius: 8px; font-weight: bold; padding: 10px; transition: 0.2s; }
+        button:active { transform: scale(0.95); }
+        
+        /* 공통 유틸리티 */
+        .center-box { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .text-center { text-align: center; }
+        
+        /* 초기 화면 */
+        .admin-login-btn { position: absolute; top: 20px; right: 20px; background: #333; color: white; }
+        #nickname-input { width: 100%; padding: 15px; font-size: 18px; margin-bottom: 20px; text-align: center; border: 2px solid #ccc; border-radius: 8px; }
+        .car-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .car-btn { padding: 20px; font-size: 18px; color: white; border-radius: 12px; }
+        .car-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .c-red { background: #e74c3c; } .c-yellow { background: #f1c40f; color: #333; }
+        .c-green { background: #2ecc71; } .c-blue { background: #3498db; }
+        .c-purple { background: #9b59b6; } .c-white { background: #ffffff; color: #333; border: 2px solid #ccc; }
+
+        /* 관리자 화면 (트랙) */
+        .track-container { background: #555; padding: 10px 0; position: relative; border-radius: 8px; overflow: hidden; margin-bottom: 20px;}
+        .finish-line { position: absolute; right: 10%; top: 0; bottom: 0; width: 5px; background: repeating-linear-gradient(to bottom, white, white 10px, black 10px, black 20px); }
+        .track-lane { height: 40px; border-bottom: 1px dashed rgba(255,255,255,0.3); position: relative; display: flex; align-items: center; padding-left: 10px;}
+        .car-icon { width: 40px; height: 25px; border-radius: 4px; position: absolute; left: 0; transition: left 0.5s ease-out; }
+        
+        /* 참가자 문제풀이 화면 */
+        .card-grid { display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; }
+        .card-btn { flex: 1; padding: 30px 10px; font-size: 18px; border-radius: 12px; color: white; }
+        
+        /* 숫자 패드 */
+        #problem-display { font-size: 22px; text-align: center; margin: 20px 0; background: #e8f4f8; padding: 20px; border-radius: 8px; }
+        #answer-display { font-size: 28px; text-align: center; height: 50px; line-height: 50px; background: #eee; margin-bottom: 10px; border-radius: 8px; letter-spacing: 2px; }
+        .numpad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .numpad button { font-size: 20px; padding: 15px; background: #fff; border: 1px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .numpad .func-btn { background: #dcdde1; }
+        .numpad .submit-btn { background: #3498db; color: white; grid-column: span 2; }
+
+        /* 미니게임 */
+        .minigame-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 20px; }
+        .minigame-btn { padding: 15px 0; font-size: 18px; background: #fff; border: 2px solid #3498db; border-radius: 8px; }
+        .shake { animation: shake 0.5s; background-color: #e74c3c !important; color: white; }
+        @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } 100% { transform: translateX(0); } }
+    </style>
+</head>
+<body>
+
+    <!-- 1. 초기 화면 -->
+    <div id="screen-intro" class="screen active">
+        <button class="admin-login-btn" onclick="loginAdmin()">관리자 로그인</button>
+        <div class="center-box">
+            <h1>🏎️ 일차식 레이싱!</h1>
+            <input type="text" id="nickname-input" placeholder="닉네임을 입력하세요">
+            <div class="car-grid">
+                <button class="car-btn c-red" onclick="joinCar('빨강')">빨강 자동차<br>(<span id="cnt-빨강">0</span>/5)</button>
+                <button class="car-btn c-yellow" onclick="joinCar('노랑')">노랑 자동차<br>(<span id="cnt-노랑">0</span>/5)</button>
+                <button class="car-btn c-green" onclick="joinCar('초록')">초록 자동차<br>(<span id="cnt-초록">0</span>/5)</button>
+                <button class="car-btn c-blue" onclick="joinCar('파랑')">파랑 자동차<br>(<span id="cnt-파랑">0</span>/5)</button>
+                <button class="car-btn c-purple" onclick="joinCar('보라')">보라 자동차<br>(<span id="cnt-보라">0</span>/5)</button>
+                <button class="car-btn c-white" onclick="joinCar('흰색')">흰색 자동차<br>(<span id="cnt-흰색">0</span>/5)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. 출발 대기 화면 -->
+    <div id="screen-wait" class="screen">
+        <div class="center-box text-center">
+            <h2>출발 준비중...</h2>
+            <p>관리자의 시작 신호를 기다려주세요.</p>
+        </div>
+    </div>
+
+    <!-- 3. 참가자 문제 화면 -->
+    <div id="screen-player" class="screen">
+        <div class="center-box">
+            <div class="card-grid" id="difficulty-cards">
+                <button class="card-btn c-green" onclick="showProblem('초급')">초급 (+2)</button>
+                <button class="card-btn c-yellow" onclick="showProblem('중급')">중급 (+4)</button>
+                <button class="card-btn c-red" onclick="showProblem('상급')">상급 (+8)</button>
+            </div>
+
+            <div id="problem-area" style="display: none;">
+                <div id="problem-display">문제가 여기에 표시됩니다.</div>
+                <div id="answer-display"></div>
+                
+                <div class="numpad">
+                    <button onclick="inputPad('1')">1</button>
+                    <button onclick="inputPad('2')">2</button>
+                    <button onclick="inputPad('3')">3</button>
+                    <button class="func-btn" onclick="inputPad('+')">+</button>
+                    
+                    <button onclick="inputPad('4')">4</button>
+                    <button onclick="inputPad('5')">5</button>
+                    <button onclick="inputPad('6')">6</button>
+                    <button class="func-btn" onclick="inputPad('-')">-</button>
+                    
+                    <button onclick="inputPad('7')">7</button>
+                    <button onclick="inputPad('8')">8</button>
+                    <button onclick="inputPad('9')">9</button>
+                    <button class="func-btn" onclick="inputPad('x')">x</button>
+                    
+                    <button class="func-btn" onclick="inputPad('C')">지우기</button>
+                    <button onclick="inputPad('0')">0</button>
+                    <button class="submit-btn" onclick="submitAnswer()">정답 제출</button>
+                </div>
+                
+                <button id="btn-change" style="width: 100%; margin-top: 15px; background: #e74c3c; color: white;" onclick="changeProblem()">문제 교체 (3초 대기)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. 미니게임 화면 -->
+    <div id="screen-minigame" class="screen">
+        <div class="center-box text-center">
+            <h2>🚨 긴급 미션! 🚨</h2>
+            <p>제일 작은 숫자부터 차례대로 누르세요!</p>
+            <div class="minigame-grid" id="minigame-board"></div>
+        </div>
+    </div>
+
+    <!-- 5. 관리자 화면 -->
+    <div id="screen-admin" class="screen">
+        <div class="center-box" style="max-width: 900px;">
+            <h2>관리자 모드</h2>
+            <div class="track-container">
+                <div class="finish-line"></div>
+                <div class="track-lane"><div id="car-빨강" class="car-icon c-red"></div></div>
+                <div class="track-lane"><div id="car-노랑" class="car-icon c-yellow"></div></div>
+                <div class="track-lane"><div id="car-초록" class="car-icon c-green"></div></div>
+                <div class="track-lane"><div id="car-파랑" class="car-icon c-blue"></div></div>
+                <div class="track-lane"><div id="car-보라" class="car-icon c-purple"></div></div>
+                <div class="track-lane"><div id="car-흰색" class="car-icon c-white"></div></div>
+            </div>
+            
+            <div class="text-center" style="margin-bottom: 20px;">
+                <button onclick="startRace()" style="background: #2ecc71; color: white; padding: 10px 30px; font-size: 18px;">레이스 시작!</button>
+                <button onclick="alert('참가자 닉네임 수정 및 퇴장 기능은 Firebase 연동 후 활성화됩니다.')" style="background: #95a5a6; color: white;">참가자 관리</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* 
+         * [Firebase 연동 안내]
+         * 현재 코드는 UI와 게임 로직(문제 출제, 정답 확인, 미니게임)을 단독으로 테스트할 수 있는 프론트엔드 완성본입니다.
+         * 실제 학생들과 실시간 멀티플레이를 하려면 여기에 Firebase Realtime Database를 연결해야 합니다.
+         */
+
+        // 전역 상태 변수
+        let myNickname = "";
+        let myCar = "";
+        let currentProblem = null;
+        let currentLevel = "";
+        let myDistance = 0; // 내 차의 현재 위치
+        let hasPenalty = false; // 150km 패널티 여부
+
+        // 화면 전환 함수
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // 1. 초기 화면 - 관리자 로그인
+        function loginAdmin() {
+            if(prompt("관리자 비밀번호를 입력하세요") === "2525") {
+                showScreen("screen-admin");
+            } else {
+                alert("비밀번호가 틀렸습니다.");
+            }
+        }
+
+        // 1. 초기 화면 - 자동차 선택
+        function joinCar(carColor) {
+            const nickname = document.getElementById('nickname-input').value.trim();
+            if(!nickname) return alert("닉네임을 입력해주세요!");
+            myNickname = nickname;
+            myCar = carColor;
+            showScreen("screen-wait");
+            // TODO: Firebase에 참가자 정보(nickname, carColor) 푸시
+        }
+
+        // 2. 관리자 - 레이스 시작
+        function startRace() {
+            alert("레이스가 시작되었습니다! 참가자 화면이 전환됩니다.");
+            // TODO: Firebase 상태를 'playing'으로 변경. (참가자들 화면 자동 전환 리스너 필요)
+            // (로컬 테스트용 강제 전환)
+            showScreen("screen-player");
+        }
+
+        // 3. 문제 출제 로직 (정수 정답 보장)
+        function generateMathProblem(level) {
+            let q = "", a = "";
+            const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+            const nonZeroRand = (min, max) => { let v=0; while(v===0) v = rand(min,max); return v; };
+
+            if(level === '초급') {
+                let coeff = nonZeroRand(-9, 9);
+                let constant = nonZeroRand(-9, 9);
+                q = `${coeff}x ${constant > 0 ? '+'+constant : constant} 에서 x의 계수는?`;
+                a = coeff.toString();
+            } 
+            else if(level === '중급') {
+                let c1 = nonZeroRand(-5, 5);
+                let num = nonZeroRand(-5, 5);
+                q = `(${c1}x) × (${num}) 의 계산 결과에서 x의 계수는?`;
+                a = (c1 * num).toString();
+            } 
+            else if(level === '상급') {
+                // 분수 출제, 단 계산 결과는 정수
+                let denom = rand(2, 5); 
+                let c1 = nonZeroRand(-5, 5) * denom; // 분모의 배수로 설정하여 약분 시 정수
+                let c2 = nonZeroRand(-5, 5) * denom;
+                q = `(1/${denom}) × (${c1}x ${c2 > 0 ? '+'+c2 : c2}) 의 계산 결과에서 상수항은?`;
+                a = (c2 / denom).toString();
+            }
+            return { question: q, answer: a };
+        }
+
+        // 3. 카드 선택 시 문제 표시
+        function showProblem(level) {
+            currentLevel = level;
+            document.getElementById('difficulty-cards').style.display = 'none';
+            document.getElementById('problem-area').style.display = 'block';
+            document.getElementById('answer-display').innerText = "";
+            
+            currentProblem = generateMathProblem(level);
+            document.getElementById('problem-display').innerText = currentProblem.question;
+        }
+
+        // 숫자패드 입력
+        function inputPad(val) {
+            let display = document.getElementById('answer-display');
+            if(val === 'C') {
+                display.innerText = display.innerText.slice(0, -1);
+            } else {
+                display.innerText += val;
+            }
+        }
+
+        // 정답 제출
+        function submitAnswer() {
+            let userAnswer = document.getElementById('answer-display').innerText;
+            if(userAnswer === currentProblem.answer) {
+                // 정답 시 이동 거리 계산
+                let moveDist = currentLevel === '초급' ? 2 : currentLevel === '중급' ? 4 : 8;
+                if(hasPenalty) moveDist -= 1; // 150km 패널티 적용
+                
+                myDistance += moveDist; 
+                alert(`정답입니다! 자동차가 ${moveDist}km 전진합니다. (현재 ${myDistance}km)`);
+                
+                // TODO: Firebase에 myDistance 업데이트 (서버 트랜잭션)
+                
+                // 트리거 체크 (로컬 시뮬레이션)
+                checkTriggers();
+                
+                // 초기화
+                document.getElementById('difficulty-cards').style.display = 'flex';
+                document.getElementById('problem-area').style.display = 'none';
+            } else {
+                alert("틀렸습니다. 다시 계산해보세요!");
+                document.getElementById('answer-display').innerText = "";
+            }
+        }
+
+        // 문제 교체 (3초 쿨타임)
+        function changeProblem() {
+            const btn = document.getElementById('btn-change');
+            btn.disabled = true;
+            btn.style.background = '#95a5a6';
+            btn.innerText = "3초 후 교체 가능...";
+            
+            setTimeout(() => {
+                currentProblem = generateMathProblem(currentLevel);
+                document.getElementById('problem-display').innerText = currentProblem.question;
+                document.getElementById('answer-display').innerText = "";
+                btn.disabled = false;
+                btn.style.background = '#e74c3c';
+                btn.innerText = "문제 교체 (3초 대기)";
+            }, 3000);
+        }
+
+        // 4. 특수 기능 (미니게임 / 패널티 트리거)
+        function checkTriggers() {
+            // 실제 구현 시에는 Firebase에서 팀 거리를 확인해야 함. (현재는 내 거리로 시뮬레이션)
+            if(myDistance >= 50 && myDistance < 55 && !window.did50km) {
+                window.did50km = true;
+                startMinigame();
+            } else if(myDistance >= 100 && myDistance < 105 && !window.did100km) {
+                window.did100km = true;
+                startMinigame();
+            } else if(myDistance >= 150 && !hasPenalty) {
+                // 선두 차량에 속한 경우라고 가정
+                alert("🚨 150km 최초 돌파! 패널티가 적용되어 앞으로 이동 거리가 1km 감소합니다.");
+                hasPenalty = true;
+            } else if(myDistance >= 200) {
+                alert("🏁 200km 결승선 통과! 최종 우승 화면으로 이동합니다.");
+                // TODO: Firebase 게임 종료 상태 전송
+            }
+        }
+
+        // 미니게임 로직
+        let minigameTargetSequence = [];
+        let currentClickIndex = 0;
+        
+        function startMinigame() {
+            showScreen("screen-minigame");
+            const board = document.getElementById('minigame-board');
+            board.innerHTML = "";
+            
+            // -50 ~ 50 무작위 10개 추출
+            let nums = [];
+            while(nums.length < 10) {
+                let r = Math.floor(Math.random() * 101) - 50;
+                if(!nums.includes(r)) nums.push(r);
+            }
+            
+            // 정답 시퀀스 저장 (오름차순 정렬)
+            minigameTargetSequence = [...nums].sort((a,b) => a - b);
+            currentClickIndex = 0;
+
+            // 버튼 렌더링
+            nums.forEach(n => {
+                let btn = document.createElement('button');
+                btn.className = "minigame-btn";
+                btn.innerText = n;
+                btn.onclick = () => handleMinigameClick(btn, n);
+                board.appendChild(btn);
+            });
+        }
+
+        function handleMinigameClick(btn, num) {
+            if(num === minigameTargetSequence[currentClickIndex]) {
+                btn.style.visibility = "hidden"; // 맞춘 버튼 숨기기
+                currentClickIndex++;
+                if(currentClickIndex >= 10) {
+                    alert("미니게임 통과! 레이스로 복귀합니다.");
+                    showScreen("screen-player");
+                    document.getElementById('difficulty-cards').style.display = 'flex';
+                    document.getElementById('problem-area').style.display = 'none';
+                }
+            } else {
+                const board = document.getElementById('minigame-board');
+                board.classList.add("shake");
+                board.style.pointerEvents = "none"; // 3초간 클릭 방지
+                
+                setTimeout(() => {
+                    board.classList.remove("shake");
+                    board.style.pointerEvents = "auto";
+                }, 3000);
+            }
+        }
+
+    </script>
+</body>
+</html>
