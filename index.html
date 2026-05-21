@@ -360,12 +360,8 @@
             user: { nickname: '', car: '', uid: 'user_' + Date.now() }, 
             gameState: 'ready',
             teams: {},
-<<<<<<< HEAD
             metrics: { solvedCount: {}, solvedHardCount: {} },
             triggerFlags: { gate50: false, gate100: false, gate150: false } // 오류 수정 1. 플래그 초기화
-=======
-            metrics: { solvedCount: {}, solvedHardCount: {} }
->>>>>>> 1a2fa8acd0384f80942caff52d6e986ae5ffd155
         };
         
         CAR_CONFIG.forEach(c => { state.teams[c.name] = { distance: 0, members: [], penaltyActive: false }; });
@@ -539,7 +535,6 @@
 
             if(state.gameState === 'playing') switchActiveScreen('screen-player');
             else switchActiveScreen('screen-wait');
-<<<<<<< HEAD
         }
 
         /* 수식 표현 정상화 헬퍼 함수 (정답 생성용) */
@@ -547,11 +542,8 @@
             if (c === 1) return "x";
             if (c === -1) return "-x";
             return c + "x";
-=======
->>>>>>> 1a2fa8acd0384f80942caff52d6e986ae5ffd155
         }
 
-        /* 1. 수식 표현 정상화 엔진 (레이텍 제거 및 고가독성 직관적 설계) */
         function formulateEquationDataset(tier) {
             const randVal = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
             const nonZeroRand = (min, max) => { let v = 0; while (v === 0) v = randVal(min, max); return v; };
@@ -571,7 +563,6 @@
             } 
             else if (tier === '중급') {
                 let termCoeff = nonZeroRand(-8, 8); let multiplier = nonZeroRand(-6, 6); let opMode = randVal(0, 1);
-<<<<<<< HEAD
                 // 오류 수정 2. 중급 문제 질문 및 정답 포맷팅 수정
                 if (opMode === 0) {
                     problemText = `다음 식을 계산하시오.<br><br><span style="color:#fff; font-weight:bold; font-size:1.8rem;">(${termCoeff}x) × (${multiplier})</span>`;
@@ -580,20 +571,10 @@
                     let targetCoeff = nonZeroRand(-6, 6); let divisor = nonZeroRand(-5, 5); let initialCoeff = targetCoeff * divisor;
                     problemText = `다음 식을 계산하시오.<br><br><span style="color:#fff; font-weight:bold; font-size:1.8rem;">(${initialCoeff}x) ÷ (${divisor})</span>`;
                     correctAnswer = formatTerm(targetCoeff);
-=======
-                if (opMode === 0) {
-                    problemText = `다음 식을 계산했을 때,<br>결과식의 <span style="color:var(--color-yellow)">x의 계수</span>를 구하시오.<br><br><span style="color:#fff; font-weight:bold; font-size:1.8rem;">(${termCoeff}x) × (${multiplier})</span>`;
-                    correctAnswer = (termCoeff * multiplier).toString();
-                } else {
-                    let targetCoeff = nonZeroRand(-6, 6); let divisor = nonZeroRand(-5, 5); let initialCoeff = targetCoeff * divisor;
-                    problemText = `다음 식을 계산했을 때,<br>결과식의 <span style="color:var(--color-yellow)">x의 계수</span>를 구하시오.<br><br><span style="color:#fff; font-weight:bold; font-size:1.8rem;">(${initialCoeff}x) ÷ (${divisor})</span>`;
-                    correctAnswer = targetCoeff.toString();
->>>>>>> 1a2fa8acd0384f80942caff52d6e986ae5ffd155
                 }
             } 
             else if (tier === '상급') {
                 let patternSelection = randVal(0, 1);
-<<<<<<< HEAD
                 let targetCoeff = nonZeroRand(-4, 4); let targetConst = nonZeroRand(-5, 5);
                 
                 // 오류 수정 3. 상급 문제 질문 및 정답 포맷팅 수정
@@ -614,24 +595,6 @@
                     let sign = b > 0 ? "+ " + Math.abs(b) : "- " + Math.abs(b); 
                     problemText = `다음 식을 계산하시오.<br><br><span style="color:#fff; font-weight:bold; font-size:1.8rem;">0.5 × (${a}x ${sign})</span>`;
                     correctAnswer = cx + dStr;
-=======
-                if (patternSelection === 0) { 
-                    let denominator = randVal(2, 4); let targetCoeff = nonZeroRand(-4, 4); let targetConst = nonZeroRand(-5, 5);
-                    let a = targetCoeff * denominator; let b = targetConst * denominator;
-                    let sign = b >= 0 ? "+ " + b : "- " + Math.abs(b); let queryField = randVal(0, 1);
-                    
-                    // 정교하고 세련된 상급 분수 레이아웃 설계
-                    let fractionHtml = `<div style="display:inline-block; vertical-align:middle; text-align:center; margin-right:5px; font-size:1.5rem;"><div style="border-bottom:2px solid #fff; padding:0 5px;">1</div><div style="padding:0 5px;">${denominator}</div></div>`;
-                    
-                    problemText = `다음 식을 풀었을 때,<br>결과식의 ${queryField === 0 ? '<span style="color:var(--color-red)">x의 계수</span>' : '<span style="color:var(--color-red)">상수항</span>'}를 구하시오.<br><br><span style="color:#fff; font-weight:bold; font-size:1.6rem; display:flex; align-items:center; justify-content:center;">${fractionHtml}(${a}x ${sign})</span>`;
-                    correctAnswer = (queryField === 0 ? targetCoeff : targetConst).toString();
-                } else { 
-                    let targetCoeff = nonZeroRand(-4, 4); let targetConst = nonZeroRand(-4, 4);
-                    let a = targetCoeff * 2; let b = targetConst * 2;
-                    let sign = b >= 0 ? "+ " + Math.abs(b) : "- " + Math.abs(b); let queryField = randVal(0, 1);
-                    problemText = `다음 식을 풀었을 때,<br>결과식의 ${queryField === 0 ? '<span style="color:var(--color-red)">x의 계수</span>' : '<span style="color:var(--color-red)">상수항</span>'}를 구하시오.<br><br><span style="color:#fff; font-weight:bold; font-size:1.8rem;">0.5 × (${a}x ${sign})</span>`;
-                    correctAnswer = (queryField === 0 ? targetCoeff : targetConst).toString();
->>>>>>> 1a2fa8acd0384f80942caff52d6e986ae5ffd155
                 }
             }
             return { text: problemText, ans: correctAnswer };
@@ -651,7 +614,6 @@
 
         function validateTerminalAnswer() {
             const workspace = document.getElementById('quiz-workspace');
-<<<<<<< HEAD
             
             // 오류 수정 4: Alert 제거 및 1x와 -1x 허용 필터링 추가
             let userAns = state.terminalInput;
@@ -660,9 +622,6 @@
             let isCorrect = (userAns === expectedAns) || (userAns.replace(/(^|[^\d])1x/g, '$1x') === expectedAns);
 
             if(isCorrect) {
-=======
-            if(state.terminalInput === state.activeProblem.ans) {
->>>>>>> 1a2fa8acd0384f80942caff52d6e986ae5ffd155
                 let delta = state.activeTier === '초급' ? 2 : state.activeTier === '중급' ? 4 : 8;
                 if(state.teams[state.user.car].penaltyActive) delta = Math.max(1, delta - 1);
                 
@@ -679,19 +638,11 @@
                     checkLocalMilestones();
                 }
                 
-<<<<<<< HEAD
                 // Alert 없이 즉시 창 닫기
                 document.getElementById('quiz-workspace').style.display = 'none';
             } else {
                 workspace.classList.add('shake-element');
                 // Alert 없이 창 흔들기 효과 이후 입력 필드만 비움
-=======
-                alert(`정답입니다! 우리 팀 자동차가 ${delta}km 앞으로 나갑니다!`);
-                document.getElementById('quiz-workspace').style.display = 'none';
-            } else {
-                workspace.classList.add('shake-element');
-                alert('앗, 틀렸어요. 식을 다시 한 번 천천히 계산해 보세요!');
->>>>>>> 1a2fa8acd0384f80942caff52d6e986ae5ffd155
                 setTimeout(() => workspace.classList.remove('shake-element'), 400);
                 clearTerminalBuffer();
             }
@@ -720,11 +671,8 @@
             else if(leadDistance >= 150 && !state.triggerFlags.gate150) {
                 state.triggerFlags.gate150 = true; 
                 document.getElementById('reward-label-easy').innerText = '+1 km 전진 (과부하)'; document.getElementById('reward-label-medium').innerText = '+3 km 전진 (과부하)'; document.getElementById('reward-label-hard').innerText = '+7 km 전진 (과부하)';
-<<<<<<< HEAD
                 
                 // 이 alert은 시스템적 마일스톤 안내이므로 유지합니다.
-=======
->>>>>>> 1a2fa8acd0384f80942caff52d6e986ae5ffd155
                 alert('🚨 150km 최초 돌파! 선두 유지의 대가로 엔진 과부하가 걸려 이동 거리가 1km씩 줄어듭니다.');
                 
                 if(isFirebaseActive) {
