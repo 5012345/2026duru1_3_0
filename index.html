@@ -538,7 +538,7 @@
             state.metrics.solvedCount[nicknameInput] = 0;
             state.metrics.solvedHardCount[nicknameInput] = 0;
             
-            const newMember = { nickname: nicknameInput, id: state.user.uid };
+            const newMember = { nickname: nicknameInput, id: state.user.uid, solvedCount: 0, solvedHardCount: 0 };
 
             if(isFirebaseActive) {
                 db.collection("algebra_racing_teams").doc(state.user.car).set({
@@ -644,15 +644,47 @@
                 let delta = state.activeTier === '초급' ? 2 : state.activeTier === '중급' ? 4 : 8;
                 if(state.teams[state.user.car].penaltyActive) delta = Math.max(1, delta - 1);
                 
-                state.metrics.solvedCount[state.user.nickname]++;
-                if(state.activeTier === '상급') state.metrics.solvedHardCount[state.user.nickname]++;
+                state.metrics.solvedCount[state.user.nickname] = (state.metrics.solvedCount[state.user.nickname] || 0) + 1;
+                if(state.activeTier === '상급') {
+                    state.metrics.solvedHardCount[state.user.nickname] = (state.metrics.solvedHardCount[state.user.nickname] || 0) + 1;
+                }
                 
                 if(isFirebaseActive) {
-                    db.collection("algebra_racing_teams").doc(state.user.car).set({
-                        distance: firebase.firestore.FieldValue.increment(delta)
-                    }, { merge: true });
+                    const teamRef = db.collection("algebra_racing_teams").doc(state.user.car);
+                    db.runTransaction((transaction) => {
+                        return transaction.get(teamRef).then((teamDoc) => {
+                            if (!teamDoc.exists) return;
+                            const data = teamDoc.data();
+                            const members = data.members || [];
+                            const updatedMembers = members.map(m => {
+                                if (m.nickname === state.user.nickname) {
+                                    return {
+                                        ...m,
+                                        solvedCount: (m.solvedCount || 0) + 1,
+                                        solvedHardCount: state.activeTier === '상급' ? (m.solvedHardCount || 0) + 1 : (m.solvedHardCount || 0)
+                                    };
+                                }
+                                return m;
+                            });
+                            transaction.update(teamRef, {
+                                distance: firebase.firestore.FieldValue.increment(delta),
+                                members: updatedMembers
+                            });
+                        });
+                    }).catch((err) => {
+                        console.error("Transaction failed: ", err);
+                    });
                 } else {
                     state.teams[state.user.car].distance += delta;
+                    
+                    const member = state.teams[state.user.car].members.find(m => m.nickname === state.user.nickname);
+                    if (member) {
+                        member.solvedCount = (member.solvedCount || 0) + 1;
+                        if (state.activeTier === '상급') {
+                            member.solvedHardCount = (member.solvedHardCount || 0) + 1;
+                        }
+                    }
+                    
                     document.getElementById('hud-distance').innerText = state.teams[state.user.car].distance;
                     checkLocalMilestones();
                 }
@@ -763,7 +795,7 @@
             names.forEach((name, i) => {
                 const randomCar = CAR_CONFIG[i % CAR_CONFIG.length].name;
                 if(state.teams[randomCar].members.length < 5) {
-                    const newBot = { nickname: name, id: 'mock_' + Date.now() + i };
+                    const newBot = { nickname: name, id: 'mock_' + Date.now() + i, solvedCount: 0, solvedHardCount: 0 };
                     if(isFirebaseActive) {
                         db.collection("algebra_racing_teams").doc(randomCar).set({ members: firebase.firestore.FieldValue.arrayUnion(newBot) }, { merge: true });
                     } else {
@@ -834,13 +866,36 @@
             document.getElementById('victory-announcement-headline').innerText = `🎉 ${winningCarName} 팀이 가장 먼저 200km를 들어왔어요! 🎉`;
             const crewMembersNames = state.teams[winningCarName].members.map(m => m.nickname).join(', ');
             document.getElementById('victory-team-contributors-list').innerText = crewMembersNames || "참가자 없음";
+            
             let maxCount = -1, quantityMvp = "-", maxHardCount = -1, qualityMvp = "-";
-            for(let key in state.metrics.solvedCount) {
-                if(state.metrics.solvedCount[key] > maxCount) { maxCount = state.metrics.solvedCount[key]; quantityMvp = key; }
-                if(state.metrics.solvedHardCount[key] > maxHardCount) { maxHardCount = state.metrics.solvedHardCount[key]; qualityMvp = key; }
+            for (let teamName in state.teams) {
+                const members = state.teams[teamName].members || [];
+                members.forEach(member => {
+                    const solved = member.solvedCount || 0;
+                    const solvedHard = member.solvedHardCount || 0;
+                    if (solved > maxCount) {
+                        maxCount = solved;
+                        quantityMvp = member.nickname;
+                    }
+                    if (solvedHard > maxHardCount) {
+                        maxHardCount = solvedHard;
+                        qualityMvp = member.nickname;
+                    }
+                });
             }
-            document.getElementById('mvp-quantity-name').innerText = `${quantityMvp} (${maxCount}개 풀었음!)`;
-            document.getElementById('mvp-quality-name').innerText = `${qualityMvp} (어려운 거 ${maxHardCount}개 풀었음!)`;
+
+            if (maxCount <= 0) {
+                document.getElementById('mvp-quantity-name').innerText = `- (0개 풀었음!)`;
+            } else {
+                document.getElementById('mvp-quantity-name').innerText = `${quantityMvp} (${maxCount}개 풀었음!)`;
+            }
+            
+            if (maxHardCount <= 0) {
+                document.getElementById('mvp-quality-name').innerText = `- (어려운 거 0개 풀었음!)`;
+            } else {
+                document.getElementById('mvp-quality-name').innerText = `${qualityMvp} (어려운 거 ${maxHardCount}개 풀었음!)`;
+            }
+
             const sortedRankboard = CAR_CONFIG.map(c => ({ name: c.name, dist: state.teams[c.name].distance, hex: c.hex })).sort((a,b) => b.dist - a.dist);
             const boardContainer = document.getElementById('victory-final-leaderboard-ranks');
             boardContainer.innerHTML = sortedRankboard.map((item, idx) => `
